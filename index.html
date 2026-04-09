@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Matricula em Curso</title>
+
+<script src="https://unpkg.com/vue@3"></script>
+
+</head>
+
+<body>
+
+<div id="app">
+
+<h2>Matricula em Curso</h2>
+
+<input v-model="nome" placeholder="Nome completo">
+
+<br><br>
+
+<input v-model="email" placeholder="Email">
+
+<br><br>
+
+<select v-model="curso">
+
+<option v-for="c in cursos">
+{{c.nome}}
+</option>
+
+</select>
+
+<br><br>
+
+<button @click="matricular">Matricular</button>
+
+<p>{{mensagem}}</p>
+
+</div>
+
+<script>
+
+Vue.createApp({
+
+data(){
+
+return{
+
+nome:"",
+email:"",
+curso:"",
+cursos:[],
+mensagem:""
+
+}
+
+},
+
+mounted(){
+
+fetch("http://localhost:3000/cursos")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+this.cursos=data
+
+})
+
+},
+
+methods:{
+
+matricular(){
+
+fetch("http://localhost:3000/matricula",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+nome:this.nome,
+email:this.email,
+curso:this.curso
+
+})
+
+})
+
+.then(res=>res.json())
+
+.then(data=>{
+
+this.mensagem=data.mensagem
+
+})
+
+}
+
+}
+
+}).mount("#app")
+
+</script>
+
+</body>
+
+</html>
